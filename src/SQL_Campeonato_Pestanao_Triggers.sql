@@ -58,6 +58,8 @@ BEGIN
             [Gols_Visitante] = @GolsVisitante,
             [Resultado] = @Resultado
         WHERE Id_Jogo = @Id
+
+        SELECT * FROM Jogo
     END
 END
 GO

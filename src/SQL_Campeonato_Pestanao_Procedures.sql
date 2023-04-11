@@ -44,14 +44,14 @@ GO
 CREATE OR ALTER PROC ClassificarPodio
 AS
 BEGIN
-    SELECT Nome, Apelido, Pontuacao FROM [Time] ORDER BY Pontuacao DESC
+    SELECT Nome, Apelido, Pontuacao, (Gols_Marcados - Gols_Recebidos) as Saldo_Gols FROM [Time] ORDER BY Pontuacao DESC, Saldo_Gols DESC
 END
 GO
 
 CREATE OR ALTER PROC Campeao
 AS
 BEGIN
-    SELECT TOP 1 Nome, Apelido, Pontuacao FROM [Time] ORDER BY Pontuacao DESC
+    SELECT TOP 1 Nome, Apelido, Pontuacao, (Gols_Marcados - Gols_Recebidos) as Saldo_Gols FROM [Time] ORDER BY Pontuacao DESC, Saldo_Gols DESC
 END
 GO
 
@@ -66,5 +66,30 @@ CREATE OR ALTER PROC Frangalha
 AS
 BEGIN
     SELECT TOP 1 Nome, Apelido, Gols_Recebidos FROM [Time] ORDER BY Gols_Recebidos DESC
+END
+GO
+
+CREATE OR ALTER PROC JogoComMaisGols
+AS
+BEGIN
+    SELECT Id_Jogo, Casa, Visitante, (Gols_Casa + Gols_Visitante) AS Total_Gols FROM [Jogo] 
+    WHERE (Gols_Casa + Gols_Visitante) = (SELECT MAX(Gols_Casa + Gols_Visitante) FROM Jogo) 
+    -- WHERE (Gols_Casa + Gols_Visitante) = (SELECT TOP 1 (Gols_Casa + Gols_Visitante) as Total FROM Jogo ORDER BY Total DESC) 
+END
+GO
+
+CREATE OR ALTER PROC MaisGolsEmUmJogo
+AS
+BEGIN
+    SELECT Nome_Time, MAX(Gols) AS Gols
+    FROM
+    (    
+    SELECT Casa AS Nome_Time, MAX(Gols_Casa) AS Gols FROM Jogo
+    GROUP BY Casa
+    UNION
+    SELECT Visitante AS Nome_Time, MAX(Gols_Visitante) AS Gols FROM Jogo
+    GROUP BY Visitante
+    ) AS Gols
+    GROUP BY Nome_Time, Gols
 END
 GO

@@ -90,12 +90,15 @@ EXEC.Campeao
 EXEC.Artilheiro
 EXEC.Frangalha
 
+EXEC.JogoComMaisGols
+EXEC.MaisGolsEmUmJogo
+
+IF OBJECT_ID('[dbo].[Jogo]', 'U') IS NOT NULL
+DROP TABLE [dbo].[Jogo]
+GO
 IF OBJECT_ID('[dbo].[Campeonato]', 'U') IS NOT NULL
 DROP TABLE [dbo].[Campeonato]
 GO
 IF OBJECT_ID('[dbo].[Time]', 'U') IS NOT NULL
 DROP TABLE [dbo].[Time]
-GO
-IF OBJECT_ID('[dbo].[Jogo]', 'U') IS NOT NULL
-DROP TABLE [dbo].[Jogo]
 GO
